@@ -1,0 +1,87 @@
+<html>
+
+<head>
+<title>Vigenere Cipher</title>
+</head>
+
+<script>
+function doCrypt(isDecrypt) {
+	if(document.getElementById("key").value.length == 0){
+		alert("Key is empty");
+		return;
+	}
+	var key = filterKey(document.getElementById("key").value);
+	if(key.length == 0){
+		alert("Key has no letters");
+		return;
+	}
+	if(isDecrypt){
+		for (var i = 0; i < key.length; i++)
+			key[i] = (26 - key[i]) % 26;
+	}
+	var textElem = document.getElementById("text");
+	textElem.value = crypt(textElem.value, key);
+}
+function crypt(input, key) {
+	var output = "";
+	for(var i = 0, j = 0; i < input.length; i++){
+		var c = input.charCodeAt(i);
+		if(isUppercase(c)){
+			output += String.fromCharCode((c - 65 + key[j % key.length]) % 26 + 65);
+			j++;
+		} 
+        else if (isLowercase(c)){
+			output += String.fromCharCode((c - 97 + key[j % key.length]) % 26 + 97);
+			j++;
+		} 
+        else{
+			output += input.charAt(i);
+		}
+	}
+	return output;
+}
+function filterKey(key){
+	var result = [];
+	for (var i = 0; i < key.length; i++){
+		var c = key.charCodeAt(i);
+		if (isLetter(c))
+			result.push((c - 65) % 32);
+	}
+	return result;
+}
+function isLetter(c){
+	return isUppercase(c) || isLowercase(c);
+}
+function isUppercase(c){
+	return 65 <= c && c <= 90; 
+}
+function isLowercase(c){
+	return 97 <= c && c <= 122;
+}
+</script>
+
+<body>
+<form action="#" method="get" onsubmit="return false">
+	<table class="noborder">
+		<tbody>
+			<tr>
+				<td><label for="text">Text:</label></td>
+				<td><textarea id="text" cols="50" rows="10" style="width:40em; height:15em">Computer Science</textarea></td>
+			</tr>
+			<tr>
+				<td><label for="key">Key:</label></td>
+				<td><input type="text" value="Bennett" id="key" style="width:10em;"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input type="button" value="Encrypt" onclick="doCrypt(false)"/>
+					<input type="button" value="Decrypt" onclick="doCrypt(true)"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+</body>
+
+</html>
